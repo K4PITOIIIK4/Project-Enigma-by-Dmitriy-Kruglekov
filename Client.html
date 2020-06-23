@@ -1,0 +1,101 @@
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+</head>
+<body>
+<div id="vueApp">
+    <form @submit.prevent="submit">
+        <div class="form-group row">
+            <div class="col">
+                <input type="text" class="form-control" placeholder="Номер первого ротора" v-model="x_number" required>
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" placeholder="Номер второго ротора" v-model="y_number" required>
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" placeholder="Номер третьего ротора" v-model="z_number" required>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col">
+                <input type="text" class="form-control" placeholder="Положение первого ротора" v-model="x_rotor" required>
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" placeholder="Положение второго ротора" v-model="y_rotor" required>
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" placeholder="Положение третьего ротора" v-model="z_rotor" required>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col">
+                <input type="text" class="form-control" placeholder="Рефлектор" v-model="reflector" required>
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" placeholder="Буква" v-model="b_string" required>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary mb-2">Готово</button>
+            </div>
+        </div>
+    </form>
+    <div>
+        <p>Результат: <strong>{{result}}</strong></p>
+    </div>
+</div>
+
+<script>
+    var app = new Vue({
+        el: '#vueApp',
+        data: {
+            result: null,
+            x_number: null,
+            y_number: null,
+            z_number: null,
+            x_rotor: null,
+            y_rotor: null,
+            z_rotor: null,
+            reflector: null,
+            b_string: null
+        },
+        methods: {
+            async submit() {
+                var query = 'x_number=' + this.x_number + '&y_number=' + this.y_number + '&z_number=' + this.z_number
+                    + '&x_rotor=' + this.x_rotor + '&y_rotor=' + this.y_rotor + '&z_rotor=' + this.z_rotor
+                    + '&reflector=' + this.reflector + '&b_string=' + this.b_string;
+
+                try {
+                    var response = await axios.get('http://127.0.0.1:5000?' + query);
+					if (this.z_rotor > 24)
+					  {
+						this.z_rotor = 0;
+						this.y_rotor++;
+					  }
+					  if (this.y_rotor > 25)
+					  {
+						this.z_rotor = 0;
+						this.y_rotor = 0;
+						this.x_rotor++;
+					  }
+					  if (this.x_rotor > 25)
+					  {
+						this.z_rotor = 0;
+						this.y_rotor = 0;
+						this.x_rotor = 0;
+					  }
+					  this.z_rotor++;
+                    this.result = response.data;
+                } catch (error) {
+                    console.error(error);
+                }
+
+            }
+        }
+    })
+</script>
+</body>
+</html>
