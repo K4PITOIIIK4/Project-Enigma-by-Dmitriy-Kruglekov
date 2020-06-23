@@ -1,0 +1,731 @@
+#include "enigma.h"
+#include "ui_enigma.h"
+#include "information.h"
+#include <iostream>
+#include "string"
+#include <QMessageBox>
+
+using namespace std;
+
+void delimiter_x_rotor();
+void delimiter_y_rotor();
+void delimiter_z_rotor();
+void delimiter_x_number();
+void delimiter_y_number();
+void delimiter_z_number();
+void delimiter_x_rotor_back();
+void delimiter_y_rotor_back();
+void delimiter_z_rotor_back();
+
+int a;
+int number_x_number = 1, number_y_number = 2, number_z_number = 3, number_x_rotor = 0, number_y_rotor = 0, number_z_rotor = 0;
+QString reflector, b, out, x_number, y_number, z_number, x_rotor, y_rotor, z_rotor;
+
+Enigma::Enigma(QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::Enigma)
+{
+    ui->setupUi(this);
+
+    connect(ui->pushButton_A, SIGNAL(clicked()),this,SLOT(digits_in()));
+    connect(ui->pushButton_B, SIGNAL(clicked()),this,SLOT(digits_in()));
+    connect(ui->pushButton_C, SIGNAL(clicked()),this,SLOT(digits_in()));
+    connect(ui->pushButton_D, SIGNAL(clicked()),this,SLOT(digits_in()));
+    connect(ui->pushButton_E, SIGNAL(clicked()),this,SLOT(digits_in()));
+    connect(ui->pushButton_F, SIGNAL(clicked()),this,SLOT(digits_in()));
+    connect(ui->pushButton_G, SIGNAL(clicked()),this,SLOT(digits_in()));
+    connect(ui->pushButton_H, SIGNAL(clicked()),this,SLOT(digits_in()));
+    connect(ui->pushButton_I, SIGNAL(clicked()),this,SLOT(digits_in()));
+    connect(ui->pushButton_J, SIGNAL(clicked()),this,SLOT(digits_in()));
+    connect(ui->pushButton_K, SIGNAL(clicked()),this,SLOT(digits_in()));
+    connect(ui->pushButton_L, SIGNAL(clicked()),this,SLOT(digits_in()));
+    connect(ui->pushButton_M, SIGNAL(clicked()),this,SLOT(digits_in()));
+    connect(ui->pushButton_N, SIGNAL(clicked()),this,SLOT(digits_in()));
+    connect(ui->pushButton_O, SIGNAL(clicked()),this,SLOT(digits_in()));
+    connect(ui->pushButton_P, SIGNAL(clicked()),this,SLOT(digits_in()));
+    connect(ui->pushButton_Q, SIGNAL(clicked()),this,SLOT(digits_in()));
+    connect(ui->pushButton_R, SIGNAL(clicked()),this,SLOT(digits_in()));
+    connect(ui->pushButton_S, SIGNAL(clicked()),this,SLOT(digits_in()));
+    connect(ui->pushButton_T, SIGNAL(clicked()),this,SLOT(digits_in()));
+    connect(ui->pushButton_U, SIGNAL(clicked()),this,SLOT(digits_in()));
+    connect(ui->pushButton_V, SIGNAL(clicked()),this,SLOT(digits_in()));
+    connect(ui->pushButton_W, SIGNAL(clicked()),this,SLOT(digits_in()));
+    connect(ui->pushButton_X, SIGNAL(clicked()),this,SLOT(digits_in()));
+    connect(ui->pushButton_Y, SIGNAL(clicked()),this,SLOT(digits_in()));
+    connect(ui->pushButton_Z, SIGNAL(clicked()),this,SLOT(digits_in()));
+
+}
+
+Enigma::~Enigma()
+{
+    delete ui;
+}
+
+void Enigma::on_pushButton_clicked()
+{
+    x_number = ui->line_x_number->text();
+    y_number = ui->line_y_number->text();
+    z_number = ui->line_z_number->text();
+    x_rotor = ui->line_x_rotor->text();
+    y_rotor = ui->line_y_rotor->text();
+    z_rotor = ui->line_z_rotor->text();
+    reflector = ui->line_reflector->text();
+
+    if(((x_number != "1")&&(x_number != "2")&&(x_number != "3")&&(x_number != "4")&&(x_number != "5")&&(x_number != "6")&&(x_number != "7")&&(x_number != "8"))||
+        ((y_number != "1")&&(y_number != "2")&&(y_number != "3")&&(y_number != "4")&&(y_number != "5")&&(y_number != "6")&&(y_number != "7")&&(y_number != "8"))||
+          ((z_number != "1")&&(z_number != "2")&&(z_number != "3")&&(z_number != "4")&&(z_number != "5")&&(z_number != "6")&&(z_number != "7")&&(z_number != "8"))||
+           ((x_rotor != "0")&&(x_rotor != "1")&&(x_rotor != "2")&&(x_rotor != "3")&&(x_rotor != "4")&&(x_rotor != "5")&&(x_rotor != "6")&&(x_rotor != "7")&&(x_rotor != "8")&&(x_rotor != "9")&&(x_rotor != "10")&&(x_rotor != "11")&&(x_rotor != "12")&&(x_rotor != "13")&&(x_rotor != "14")&&(x_rotor != "15")&&(x_rotor != "16")&&(x_rotor != "17")&&(x_rotor != "18")&&(x_rotor != "19")&&(x_rotor != "20")&&(x_rotor != "21")&&(x_rotor != "22")&&(x_rotor != "23")&&(x_rotor != "24")&&(x_rotor != "25"))||
+            ((y_rotor != "0")&&(y_rotor != "1")&&(y_rotor != "2")&&(y_rotor != "3")&&(y_rotor != "4")&&(y_rotor != "5")&&(y_rotor != "6")&&(y_rotor != "7")&&(y_rotor != "8")&&(y_rotor != "9")&&(y_rotor != "10")&&(y_rotor != "11")&&(y_rotor != "12")&&(y_rotor != "13")&&(y_rotor != "14")&&(y_rotor != "15")&&(y_rotor != "16")&&(y_rotor != "17")&&(y_rotor != "18")&&(y_rotor != "19")&&(y_rotor != "20")&&(y_rotor != "21")&&(y_rotor != "22")&&(y_rotor != "23")&&(y_rotor != "24")&&(y_rotor != "25"))||
+              ((z_rotor != "0")&&(z_rotor != "1")&&(z_rotor != "2")&&(z_rotor != "3")&&(z_rotor != "4")&&(z_rotor != "5")&&(z_rotor != "6")&&(z_rotor != "7")&&(z_rotor != "8")&&(z_rotor != "9")&&(z_rotor != "10")&&(z_rotor != "11")&&(z_rotor != "12")&&(z_rotor != "13")&&(z_rotor != "14")&&(z_rotor != "15")&&(z_rotor != "16")&&(z_rotor != "17")&&(z_rotor != "18")&&(z_rotor != "19")&&(z_rotor != "20")&&(z_rotor != "21")&&(z_rotor != "22")&&(z_rotor != "23")&&(z_rotor != "24")&&(z_rotor != "25"))||
+                ((reflector != "B")&&(reflector != "C"))||
+                  ((x_number == y_number)||(y_number == z_number)||(z_number == x_number)))
+    {
+      QMessageBox::information(this, "Ошибка!", "Вы не ввели данные, или ввод некоректен!");
+      x_number = "1";
+      y_number = "2";
+      z_number = "3";
+      x_rotor = "0";
+      y_rotor = "0";
+      z_rotor = "0";
+      reflector = "B";
+      ui->label_x_number->setText(x_number);
+      ui->label_y_number->setText(y_number);
+      ui->label_z_number->setText(z_number);
+      ui->label_x_rotor->setText(x_rotor);
+      ui->label_y_rotor->setText(y_rotor);
+      ui->label_z_rotor->setText(z_rotor);
+      ui->label_reflector->setText(reflector);
+    }
+     else
+    {
+        ui->label_x_number->setText(x_number);
+        ui->label_y_number->setText(y_number);
+        ui->label_z_number->setText(z_number);
+        ui->label_x_rotor->setText(x_rotor);
+        ui->label_y_rotor->setText(y_rotor);
+        ui->label_z_rotor->setText(z_rotor);
+        ui->label_reflector->setText(reflector);
+    }
+}
+
+void Enigma::digits_in()
+{
+
+   QPushButton *button = (QPushButton *)sender();
+
+   ui->label_in->setText(button->text());
+
+   delimiter_x_number();
+   delimiter_y_number();
+   delimiter_z_number();
+   delimiter_x_rotor();
+   delimiter_y_rotor();
+   delimiter_z_rotor();
+
+   b = (button->text());
+   
+   system("cd C:\Users\bosss\Desktop\flask");
+   system("set FLASK_APP=main.py")
+   
+   
+   
+   
+  ui->out->setText(out);
+  number_z_rotor ++;
+  if(number_z_rotor == 26)
+  {
+      number_z_rotor = 0;
+      number_y_rotor++;
+  }
+  if(number_y_rotor == 26)
+  {
+  number_z_rotor = 0;
+  number_y_rotor = 0;
+  number_x_rotor++;
+  }
+  if(number_x_rotor == 26)
+  {
+  number_z_rotor = 0;
+  number_y_rotor = 0;
+  number_x_rotor = 0;
+  }
+  delimiter_x_rotor_back();
+  delimiter_y_rotor_back();
+  delimiter_z_rotor_back();
+  ui->label_x_rotor->setText(x_rotor);
+  ui->label_y_rotor->setText(y_rotor);
+  ui->label_z_rotor->setText(z_rotor);
+}
+
+void Enigma::on_pushButton_2_clicked()
+{
+    Information window;
+    window.setModal(true);
+    window.exec();
+}
+
+
+
+void delimiter_x_number()
+{
+    if(x_number == "1")
+        number_x_number = 1;
+                else
+                if(x_number == "2")
+                    number_x_number = 2;
+                            else
+                            if(x_number == "3")
+                                number_x_number = 3;
+                                        else
+                                        if(x_number == "4")
+                                            number_x_number = 4;
+                                                    else
+                                                    if(x_number == "5")
+                                                        number_x_number = 5;
+                                                                else
+                                                                if(x_number == "6")
+                                                                    number_x_number = 6;
+                                                                    else
+                                                                    if(x_number == "7")
+                                                                        number_x_number = 7;
+                                                                            else
+                                                                            if(x_number == "8")
+                                                                                number_x_number = 8;
+}
+void delimiter_y_number()
+{
+    if(y_number == "1")
+        number_y_number = 1;
+                else
+                if(y_number == "2")
+                    number_y_number = 2;
+                            else
+                            if(y_number == "3")
+                                number_y_number = 3;
+                                        else
+                                        if(y_number == "4")
+                                            number_y_number = 4;
+                                                    else
+                                                    if(y_number == "5")
+                                                        number_y_number = 5;
+                                                                else
+                                                                if(y_number == "6")
+                                                                    number_y_number = 6;
+                                                                    else
+                                                                    if(y_number == "7")
+                                                                        number_y_number = 7;
+                                                                            else
+                                                                            if(y_number == "8")
+                                                                                number_y_number = 8;
+}
+void delimiter_z_number()
+{
+    if(z_number == "1")
+        number_z_number = 1;
+                else
+                if(z_number == "2")
+                    number_z_number = 2;
+                            else
+                            if(z_number == "3")
+                                number_z_number = 3;
+                                        else
+                                        if(z_number == "4")
+                                            number_z_number = 4;
+                                                    else
+                                                    if(z_number == "5")
+                                                        number_z_number = 5;
+                                                                else
+                                                                if(z_number == "6")
+                                                                    number_z_number = 6;
+                                                                        else
+                                                                        if(z_number == "7")
+                                                                            number_z_number = 7;
+                                                                            else
+                                                                            if(z_number == "8")
+                                                                                number_z_number = 8;
+}
+void delimiter_x_rotor()
+{
+    if(x_rotor == "0")
+        number_x_rotor = 0;
+                else
+                if(x_rotor == "1")
+                    number_x_rotor = 1;
+                            else
+                            if(x_rotor == "2")
+                                number_x_rotor = 2;
+                                        else
+                                        if(x_rotor == "3")
+                                            number_x_rotor = 3;
+                                                    else
+                                                    if(x_rotor == "4")
+                                                        number_x_rotor = 4;
+                                                                else
+                                                                if(x_rotor == "5")
+                                                                    number_x_rotor = 5;
+                                                                            else
+                                                                            if(x_rotor == "6")
+                                                                                number_x_rotor = 6;
+                                                                                else
+                                                                                if(x_rotor == "7")
+                                                                                    number_x_rotor = 7;
+                                                                                            else
+                                                                                            if(x_rotor == "8")
+                                                                                                number_x_rotor = 8;
+                                                                                                        else
+                                                                                                        if(x_rotor == "9")
+                                                                                                            number_x_rotor = 9;
+                                                                                                                    else
+                                                                                                                    if(x_rotor == "10")
+                                                                                                                        number_x_rotor = 10;
+                                                                                                                                else
+                                                                                                                                if(x_rotor == "11")
+                                                                                                                                    number_x_rotor = 11;
+                                                                                                                                            else
+                                                                                                                                            if(x_rotor == "12")
+                                                                                                                                                number_x_rotor = 12;
+                                                                                                                                                        else
+                                                                                                                                                        if(x_rotor == "13")
+                                                                                                                                                            number_x_rotor = 13;
+                                                                                                                                                            else
+                                                                                                                                                            if(x_rotor == "14")
+                                                                                                                                                                number_x_rotor = 14;
+                                                                                                                                                                        else
+                                                                                                                                                                        if(x_rotor == "15")
+                                                                                                                                                                            number_x_rotor = 15;
+                                                                                                                                                                        else
+                                                                                                                                                                        if(x_rotor == "16")
+                                                                                                                                                                            number_x_rotor = 16;
+                                                                                                                                                                                    else
+                                                                                                                                                                                    if(x_rotor == "17")
+                                                                                                                                                                                        number_x_rotor = 17;
+                                                                                                                                                                                                else
+                                                                                                                                                                                                if(x_rotor == "18")
+                                                                                                                                                                                                    number_x_rotor = 18;
+                                                                                                                                                                                                            else
+                                                                                                                                                                                                            if(x_rotor == "19")
+                                                                                                                                                                                                                number_x_rotor = 19;
+                                                                                                                                                                                                                        else
+                                                                                                                                                                                                                        if(x_rotor == "20")
+                                                                                                                                                                                                                            number_x_rotor = 20;
+                                                                                                                                                                                                                                    else
+                                                                                                                                                                                                                                    if(x_rotor == "21")
+                                                                                                                                                                                                                                        number_x_rotor = 21;
+                                                                                                                                                                                                                                        else
+                                                                                                                                                                                                                                        if(x_rotor == "22")
+                                                                                                                                                                                                                                            number_x_rotor = 22;
+                                                                                                                                                                                                                                                    else
+                                                                                                                                                                                                                                                    if(x_rotor == "23")
+                                                                                                                                                                                                                                                        number_x_rotor = 23;
+                                                                                                                                                                                                                                                    else
+                                                                                                                                                                                                                                                    if(x_rotor == "24")
+                                                                                                                                                                                                                                                        number_x_rotor = 24;
+                                                                                                                                                                                                                                                                else
+                                                                                                                                                                                                                                                                if(x_rotor == "25")
+                                                                                                                                                                                                                                                                    number_x_rotor = 25;
+}
+
+void delimiter_y_rotor()
+{
+    if(y_rotor == "0")
+        number_y_rotor = 0;
+                else
+                if(y_rotor == "1")
+                    number_y_rotor = 1;
+                            else
+                            if(y_rotor == "2")
+                                number_y_rotor = 2;
+                                        else
+                                        if(y_rotor == "3")
+                                            number_y_rotor = 3;
+                                                    else
+                                                    if(y_rotor == "4")
+                                                        number_y_rotor = 4;
+                                                                else
+                                                                if(y_rotor == "5")
+                                                                    number_y_rotor = 5;
+                                                                            else
+                                                                            if(y_rotor == "6")
+                                                                                number_y_rotor = 6;
+                                                                                else
+                                                                                if(y_rotor == "7")
+                                                                                    number_y_rotor = 7;
+                                                                                            else
+                                                                                            if(y_rotor == "8")
+                                                                                                number_y_rotor = 8;
+                                                                                                        else
+                                                                                                        if(y_rotor == "9")
+                                                                                                            number_y_rotor = 9;
+                                                                                                                    else
+                                                                                                                    if(y_rotor == "10")
+                                                                                                                        number_y_rotor = 10;
+                                                                                                                                else
+                                                                                                                                if(y_rotor == "11")
+                                                                                                                                    number_y_rotor = 11;
+                                                                                                                                            else
+                                                                                                                                            if(y_rotor == "12")
+                                                                                                                                                number_y_rotor = 12;
+                                                                                                                                                        else
+                                                                                                                                                        if(y_rotor == "13")
+                                                                                                                                                            number_y_rotor = 13;
+                                                                                                                                                            else
+                                                                                                                                                            if(y_rotor == "14")
+                                                                                                                                                                number_y_rotor = 14;
+                                                                                                                                                                        else
+                                                                                                                                                                        if(y_rotor == "15")
+                                                                                                                                                                            number_y_rotor = 15;
+                                                                                                                                                                        else
+                                                                                                                                                                        if(y_rotor == "16")
+                                                                                                                                                                            number_y_rotor = 16;
+                                                                                                                                                                                    else
+                                                                                                                                                                                    if(y_rotor == "17")
+                                                                                                                                                                                        number_y_rotor = 17;
+                                                                                                                                                                                                else
+                                                                                                                                                                                                if(y_rotor == "18")
+                                                                                                                                                                                                    number_y_rotor = 18;
+                                                                                                                                                                                                            else
+                                                                                                                                                                                                            if(y_rotor == "19")
+                                                                                                                                                                                                                number_y_rotor = 19;
+                                                                                                                                                                                                                        else
+                                                                                                                                                                                                                        if(y_rotor == "20")
+                                                                                                                                                                                                                            number_y_rotor = 20;
+                                                                                                                                                                                                                                    else
+                                                                                                                                                                                                                                    if(y_rotor == "21")
+                                                                                                                                                                                                                                        number_y_rotor = 21;
+                                                                                                                                                                                                                                        else
+                                                                                                                                                                                                                                        if(y_rotor == "22")
+                                                                                                                                                                                                                                            number_y_rotor = 22;
+                                                                                                                                                                                                                                                    else
+                                                                                                                                                                                                                                                    if(y_rotor == "23")
+                                                                                                                                                                                                                                                        number_y_rotor = 23;
+                                                                                                                                                                                                                                                            else
+                                                                                                                                                                                                                                                            if(y_rotor == "24")
+                                                                                                                                                                                                                                                                number_y_rotor = 24;
+                                                                                                                                                                                                                                                                        else
+                                                                                                                                                                                                                                                                        if(y_rotor == "25")
+                                                                                                                                                                                                                                                                            number_y_rotor = 25;
+}
+
+void delimiter_z_rotor()
+{
+    if(z_rotor == "0")
+        number_z_rotor = 0;
+                else
+                if(z_rotor == "1")
+                    number_z_rotor = 1;
+                            else
+                            if(z_rotor == "2")
+                                number_z_rotor = 2;
+                                        else
+                                        if(z_rotor == "3")
+                                            number_z_rotor = 3;
+                                                    else
+                                                    if(z_rotor == "4")
+                                                        number_z_rotor = 4;
+                                                                else
+                                                                if(z_rotor == "5")
+                                                                    number_z_rotor = 5;
+                                                                            else
+                                                                            if(z_rotor == "6")
+                                                                                number_z_rotor = 6;
+                                                                                else
+                                                                                if(z_rotor == "7")
+                                                                                    number_z_rotor = 7;
+                                                                                            else
+                                                                                            if(z_rotor == "8")
+                                                                                                number_z_rotor = 8;
+                                                                                                        else
+                                                                                                        if(z_rotor == "9")
+                                                                                                            number_z_rotor = 9;
+                                                                                                                    else
+                                                                                                                    if(z_rotor == "10")
+                                                                                                                        number_z_rotor = 10;
+                                                                                                                                else
+                                                                                                                                if(z_rotor == "11")
+                                                                                                                                    number_z_rotor = 11;
+                                                                                                                                            else
+                                                                                                                                            if(z_rotor == "12")
+                                                                                                                                                number_z_rotor = 12;
+                                                                                                                                                        else
+                                                                                                                                                        if(z_rotor == "13")
+                                                                                                                                                            number_z_rotor = 13;
+                                                                                                                                                            else
+                                                                                                                                                            if(z_rotor == "14")
+                                                                                                                                                                number_z_rotor = 14;
+                                                                                                                                                                        else
+                                                                                                                                                                        if(z_rotor == "15")
+                                                                                                                                                                            number_z_rotor = 15;
+                                                                                                                                                                        else
+                                                                                                                                                                        if(z_rotor == "16")
+                                                                                                                                                                            number_z_rotor = 16;
+                                                                                                                                                                                    else
+                                                                                                                                                                                    if(z_rotor == "17")
+                                                                                                                                                                                        number_z_rotor = 17;
+                                                                                                                                                                                                else
+                                                                                                                                                                                                if(z_rotor == "18")
+                                                                                                                                                                                                    number_z_rotor = 18;
+                                                                                                                                                                                                            else
+                                                                                                                                                                                                            if(z_rotor == "19")
+                                                                                                                                                                                                                number_z_rotor = 19;
+                                                                                                                                                                                                                        else
+                                                                                                                                                                                                                        if(z_rotor == "20")
+                                                                                                                                                                                                                            number_z_rotor = 20;
+                                                                                                                                                                                                                                    else
+                                                                                                                                                                                                                                    if(z_rotor == "21")
+                                                                                                                                                                                                                                        number_z_rotor = 21;
+                                                                                                                                                                                                                                        else
+                                                                                                                                                                                                                                        if(z_rotor == "22")
+                                                                                                                                                                                                                                            number_z_rotor = 22;
+                                                                                                                                                                                                                                                    else
+                                                                                                                                                                                                                                                    if(z_rotor == "23")
+                                                                                                                                                                                                                                                        number_z_rotor = 23;
+                                                                                                                                                                                                                                                            else
+                                                                                                                                                                                                                                                            if(z_rotor == "24")
+                                                                                                                                                                                                                                                                number_z_rotor = 24;
+                                                                                                                                                                                                                                                                        else
+                                                                                                                                                                                                                                                                        if(z_rotor == "25")
+                                                                                                                                                                                                                                                                            number_z_rotor = 25;
+}
+void delimiter_x_rotor_back()
+{
+    if(number_x_rotor == 0)
+        x_rotor = "0";
+                else
+                if(number_x_rotor == 1)
+                    x_rotor = "1";
+                            else
+                            if(number_x_rotor == 2)
+                                x_rotor = "2";
+                                        else
+                                        if(number_x_rotor == 3)
+                                            x_rotor = "3";
+                                                    else
+                                                    if(number_x_rotor == 4)
+                                                        x_rotor = "4";
+                                                                else
+                                                                if(number_x_rotor == 5)
+                                                                    x_rotor = "5";
+                                                                            else
+                                                                            if(number_x_rotor == 6)
+                                                                                x_rotor = "6";
+                                                                                else
+                                                                                if(number_x_rotor == 7)
+                                                                                    x_rotor = "7";
+                                                                                            else
+                                                                                            if(number_x_rotor == 8)
+                                                                                                x_rotor = "8";
+                                                                                                        else
+                                                                                                        if(number_x_rotor == 9)
+                                                                                                            x_rotor = "9";
+                                                                                                                    else
+                                                                                                                    if(number_x_rotor == 10)
+                                                                                                                        x_rotor = "10";
+                                                                                                                                else
+                                                                                                                                if(number_x_rotor == 11)
+                                                                                                                                    x_rotor = "11";
+                                                                                                                                            else
+                                                                                                                                            if(number_x_rotor == 12)
+                                                                                                                                                x_rotor = "12";
+                                                                                                                                                        else
+                                                                                                                                                        if(number_x_rotor == 13)
+                                                                                                                                                            x_rotor = "13";
+                                                                                                                                                            else
+                                                                                                                                                            if(number_x_rotor == 14)
+                                                                                                                                                                x_rotor = "14";
+                                                                                                                                                                        else
+                                                                                                                                                                        if(number_x_rotor == 15)
+                                                                                                                                                                            x_rotor = "15";
+                                                                                                                                                                        else
+                                                                                                                                                                        if(number_x_rotor == 16)
+                                                                                                                                                                            x_rotor = "16";
+                                                                                                                                                                                    else
+                                                                                                                                                                                    if(number_x_rotor == 17)
+                                                                                                                                                                                        x_rotor = "17";
+                                                                                                                                                                                                else
+                                                                                                                                                                                                if(number_x_rotor == 18)
+                                                                                                                                                                                                    x_rotor = "18";
+                                                                                                                                                                                                            else
+                                                                                                                                                                                                            if(number_x_rotor == 19)
+                                                                                                                                                                                                                x_rotor = "19";
+                                                                                                                                                                                                                        else
+                                                                                                                                                                                                                        if(number_x_rotor == 20)
+                                                                                                                                                                                                                            x_rotor = "20";
+                                                                                                                                                                                                                                    else
+                                                                                                                                                                                                                                    if(number_x_rotor == 21)
+                                                                                                                                                                                                                                        x_rotor = "21";
+                                                                                                                                                                                                                                        else
+                                                                                                                                                                                                                                        if(number_x_rotor == 22)
+                                                                                                                                                                                                                                            x_rotor = "22";
+                                                                                                                                                                                                                                                    else
+                                                                                                                                                                                                                                                    if(number_x_rotor == 23)
+                                                                                                                                                                                                                                                        x_rotor = "23";
+                                                                                                                                                                                                                                                    else
+                                                                                                                                                                                                                                                    if(number_x_rotor == 24)
+                                                                                                                                                                                                                                                        x_rotor = "24";
+                                                                                                                                                                                                                                                                else
+                                                                                                                                                                                                                                                                if(number_x_rotor == 25)
+                                                                                                                                                                                                                                                                    x_rotor = "25";
+}
+
+void delimiter_y_rotor_back()
+{
+    if(number_y_rotor == 0)
+        y_rotor = "0";
+                else
+                if(number_y_rotor == 1)
+                    y_rotor = "1";
+                            else
+                            if(number_y_rotor == 2)
+                                y_rotor = "2";
+                                        else
+                                        if(number_y_rotor == 3)
+                                            y_rotor = "3";
+                                                    else
+                                                    if(number_y_rotor == 4)
+                                                        y_rotor = "4";
+                                                                else
+                                                                if(number_y_rotor == 5)
+                                                                    y_rotor = "5";
+                                                                            else
+                                                                            if(number_y_rotor == 6)
+                                                                                y_rotor = "6";
+                                                                                else
+                                                                                if(number_y_rotor == 7)
+                                                                                    y_rotor = "7";
+                                                                                            else
+                                                                                            if(number_y_rotor == 8)
+                                                                                                y_rotor = "8";
+                                                                                                        else
+                                                                                                        if(number_y_rotor == 9)
+                                                                                                            y_rotor = "9";
+                                                                                                                    else
+                                                                                                                    if(number_y_rotor == 10)
+                                                                                                                        y_rotor = "10";
+                                                                                                                                else
+                                                                                                                                if(number_y_rotor == 11)
+                                                                                                                                    y_rotor = "11";
+                                                                                                                                            else
+                                                                                                                                            if(number_y_rotor == 12)
+                                                                                                                                                y_rotor = "12";
+                                                                                                                                                        else
+                                                                                                                                                        if(number_y_rotor == 13)
+                                                                                                                                                            y_rotor = "13";
+                                                                                                                                                            else
+                                                                                                                                                            if(number_y_rotor == 14)
+                                                                                                                                                                y_rotor = "14";
+                                                                                                                                                                        else
+                                                                                                                                                                        if(number_y_rotor == 15)
+                                                                                                                                                                            y_rotor = "15";
+                                                                                                                                                                        else
+                                                                                                                                                                        if(number_y_rotor == 16)
+                                                                                                                                                                            y_rotor = "16";
+                                                                                                                                                                                    else
+                                                                                                                                                                                    if(number_y_rotor == 17)
+                                                                                                                                                                                        y_rotor = "17";
+                                                                                                                                                                                                else
+                                                                                                                                                                                                if(number_y_rotor == 18)
+                                                                                                                                                                                                    y_rotor = "18";
+                                                                                                                                                                                                            else
+                                                                                                                                                                                                            if(number_y_rotor == 19)
+                                                                                                                                                                                                                y_rotor = "19";
+                                                                                                                                                                                                                        else
+                                                                                                                                                                                                                        if(number_y_rotor == 20)
+                                                                                                                                                                                                                            y_rotor = "20";
+                                                                                                                                                                                                                                    else
+                                                                                                                                                                                                                                    if(number_y_rotor == 21)
+                                                                                                                                                                                                                                        y_rotor = "21";
+                                                                                                                                                                                                                                        else
+                                                                                                                                                                                                                                        if(number_y_rotor == 22)
+                                                                                                                                                                                                                                            y_rotor = "22";
+                                                                                                                                                                                                                                                    else
+                                                                                                                                                                                                                                                    if(number_y_rotor == 23)
+                                                                                                                                                                                                                                                        y_rotor = "23";
+                                                                                                                                                                                                                                                    else
+                                                                                                                                                                                                                                                    if(number_y_rotor == 24)
+                                                                                                                                                                                                                                                        y_rotor = "24";
+                                                                                                                                                                                                                                                                else
+                                                                                                                                                                                                                                                                if(number_y_rotor == 25)
+                                                                                                                                                                                                                                                                    y_rotor = "25";
+}
+
+void delimiter_z_rotor_back()
+{
+    if(number_z_rotor == 0)
+        z_rotor = "0";
+                else
+                if(number_z_rotor == 1)
+                    z_rotor = "1";
+                            else
+                            if(number_z_rotor == 2)
+                                z_rotor = "2";
+                                        else
+                                        if(number_z_rotor == 3)
+                                            z_rotor = "3";
+                                                    else
+                                                    if(number_z_rotor == 4)
+                                                        z_rotor = "4";
+                                                                else
+                                                                if(number_z_rotor == 5)
+                                                                    z_rotor = "5";
+                                                                            else
+                                                                            if(number_z_rotor == 6)
+                                                                                z_rotor = "6";
+                                                                                else
+                                                                                if(number_z_rotor == 7)
+                                                                                    z_rotor = "7";
+                                                                                            else
+                                                                                            if(number_z_rotor == 8)
+                                                                                                z_rotor = "8";
+                                                                                                        else
+                                                                                                        if(number_z_rotor == 9)
+                                                                                                            z_rotor = "9";
+                                                                                                                    else
+                                                                                                                    if(number_z_rotor == 10)
+                                                                                                                        z_rotor = "10";
+                                                                                                                                else
+                                                                                                                                if(number_z_rotor == 11)
+                                                                                                                                    z_rotor = "11";
+                                                                                                                                            else
+                                                                                                                                            if(number_z_rotor == 12)
+                                                                                                                                                z_rotor = "12";
+                                                                                                                                                        else
+                                                                                                                                                        if(number_z_rotor == 13)
+                                                                                                                                                            z_rotor = "13";
+                                                                                                                                                            else
+                                                                                                                                                            if(number_z_rotor == 14)
+                                                                                                                                                                z_rotor = "14";
+                                                                                                                                                                        else
+                                                                                                                                                                        if(number_z_rotor == 15)
+                                                                                                                                                                            z_rotor = "15";
+                                                                                                                                                                        else
+                                                                                                                                                                        if(number_z_rotor == 16)
+                                                                                                                                                                            z_rotor = "16";
+                                                                                                                                                                                    else
+                                                                                                                                                                                    if(number_z_rotor == 17)
+                                                                                                                                                                                        z_rotor = "17";
+                                                                                                                                                                                                else
+                                                                                                                                                                                                if(number_z_rotor == 18)
+                                                                                                                                                                                                    z_rotor = "18";
+                                                                                                                                                                                                            else
+                                                                                                                                                                                                            if(number_z_rotor == 19)
+                                                                                                                                                                                                                z_rotor = "19";
+                                                                                                                                                                                                                        else
+                                                                                                                                                                                                                        if(number_z_rotor == 20)
+                                                                                                                                                                                                                            z_rotor = "20";
+                                                                                                                                                                                                                                    else
+                                                                                                                                                                                                                                    if(number_z_rotor == 21)
+                                                                                                                                                                                                                                        z_rotor = "21";
+                                                                                                                                                                                                                                        else
+                                                                                                                                                                                                                                        if(number_z_rotor == 22)
+                                                                                                                                                                                                                                            z_rotor = "22";
+                                                                                                                                                                                                                                                    else
+                                                                                                                                                                                                                                                    if(number_z_rotor == 23)
+                                                                                                                                                                                                                                                        z_rotor = "23";
+                                                                                                                                                                                                                                                    else
+                                                                                                                                                                                                                                                    if(number_z_rotor == 24)
+                                                                                                                                                                                                                                                        z_rotor = "24";
+                                                                                                                                                                                                                                                                else
+                                                                                                                                                                                                                                                                if(number_z_rotor == 25)
+                                                                                                                                                                                                                                                                    z_rotor = "25";
+}
+
